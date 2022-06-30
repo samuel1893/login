@@ -7,7 +7,9 @@ const crypto = require("crypto")
 
 const port = 3310;
 var path = require("path");
-const { useCLS } = require("sequelize");
+const { useCLS, where } = require("sequelize");
+const sequelize = require("sequelize");
+const { userInfo } = require("os");
 const app = express();
 
 app.use(session({secret:"hfewiu2hgfoewhgf"}));
@@ -34,14 +36,22 @@ app.post("/registrar", async(req, res) => {
     let hash = crypto.createHash('md5').update("senha").digest("hex")
     await User.create({nome: nome, email: email, password: hash, cargo: cargo});
  
-    res.render("login");
+    res.render("sucesso");
 })
 app.post("/login", async(req, res) => {
     var email= req.body.email;
     var senha= req.body.password;
     let hash = crypto.createHash('md5').update("senha").digest("hex")
- 
-    res.render("login");
+    db.query("SELECT * FROM users WHERE password ='"+hash+"' AND email = '"+email+"'",  function (err, results){
+        if(results.length > 0){
+            res.render("../views/sucesso.ejs");
+        }
+        else{
+            console.log("erro");
+        }
+    });
+
+        
 })
 
 app.listen(port, () => {
