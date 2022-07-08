@@ -1,3 +1,4 @@
+const sequelize = require("sequelize");
 const Sequelize = require("sequelize");
 const db = require("./db");
 
@@ -22,6 +23,10 @@ const User = db.define("user", {
     },
     cargo: {
         type: Sequelize.STRING,
+        allowNull: true
+    },
+    auth_token: {
+        type: sequelize.STRING,
         allowNull: true
     },
 })
